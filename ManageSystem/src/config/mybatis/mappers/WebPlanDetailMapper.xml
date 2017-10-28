@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC   
+    "-//mybatis.org//DTD Mapper 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    
+<mapper namespace="cn.MS.dao.WebPlanDetailMapper">
+	<insert id="addWebPlanDetail">
+		insert into web_plan_detail(name,department_name,duty,visit_date,visit_time,visit_address,
+		collection,remark,state,web_plan_id,user_id)
+		values(#{name},#{departmentName},#{duty},#{visitDate},#{visitTime},#{visitAddress},
+		#{collection},#{remark},#{state},#{webPlan.id},#{user.id})
+	</insert>
+	<update id="updateWebPlanDetail">
+		update web_plan_detail
+		<set>
+			<if test="#{name} != null">name = #{name},</if>
+			<if test="#{departmentName} != null">department_name = #{departmentName},</if>
+			<if test="#{duty} != null">duty = #{duty},</if>
+			<if test="#{visitDate} != null">visit_date = #{visitDate},</if>
+			<if test="#{visitTime} != null">visit_time = #{visitTime},</if>
+			<if test="#{visitAddress} != null">visit_address = #{visitAddress},</if>
+			<if test="#{collection} != null">collection = #{collection},</if>
+			<if test="#{remark} != null">remark = #{remark},</if>
+			<if test="#{user.id} != null">user_id = #{user.id}</if>
+		</set>
+		where id = #{id}
+	</update>
+	<select id="getWebPlanDetailById" resultMap="webplandetailMap">
+		select * from web_plan_detail where id = #{id} <if test="state != null">and state = 1</if>
+	</select>
+	<select id="getWebPlanDetailByWebPlanId" resultMap="webplandetailMap">
+		select * from web_plan_detail where web_plan_id = #{webPlan_id} <if test="state != null">and state = 1</if>
+	</select>
+	<select id="getWebPlanDetailByName" resultMap="webplandetailMap">
+		select * from web_plan_detail where name like CONCAT(CONCAT('%', #{name}), '%') <if test="state != null">and state = 1</if>
+	</select>
+	<select id="getAllWebPlanDetail" resultMap="webplandetailMap">
+		select * from web_plan_detail <if test="state != null">and state = 1</if>
+	</select>
+	<select id="getWebPlanDetailByState" resultMap="webplandetailMap">
+		select * from web_plan_detail where state = #{state}
+	</select>
+	<resultMap type="cn.MS.bean.WebPlanDetail" id="webplandetailMap">
+		<result property="departmentName" column="department_name"/>
+		<result property="visitDate" column="visit_date"/>
+		<result property="visitTime" column="visit_time"/>
+		<result property="visitAddress" column="visit_address"/>
+	</resultMap>
+</mapper>

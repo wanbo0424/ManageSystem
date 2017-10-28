@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC   
+    "-//mybatis.org//DTD Mapper 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.MS.dao.DepartmentMapper">
+	<insert id="addDepartment" parameterType="cn.MS.bean.Department">
+		insert into department (department_name,phone,state) values
+		(#{departmentName},#{phone},#{state})
+	</insert>
+
+	<select id="selectAll" resultOrdered="true" resultMap="department" parameterType="cn.MS.bean.Department">
+		select * from department 
+		<!-- <where>
+		  <if test="#{id}!=null">id=#{id}</if>
+		  and
+		  <if test="#{departName}!=null">department_name='%'+#{departmentName}+'%'</if>
+		  and
+		  <if test="#{state}!=null">state=#{state}</if>
+		  
+		</where> -->
+	</select>
+	<select id="get" resultMap="department">
+		select *from department where id = #{id}
+	</select>
+
+	<delete id="deleteDepartment">
+		delete from department where id=#{id}
+	</delete>
+
+	<update id="updateDepartment" parameterType="cn.MS.bean.Department">
+		update department
+		<set>
+			<if test="#{departname}!=null">department_name=#{departmentName},</if>
+			<if test="#{phone}!=null">phone=#{phone},</if>
+			<if test="#{state}!=null">state=#{state},</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<resultMap type="cn.MS.bean.Department" id="department">
+		<id property="id" column="id" />
+		<result property="departmentName" column="department_name" />
+		<result property="phone" column="phone" />
+		<result property="state" column="state" />
+	</resultMap>
+</mapper>

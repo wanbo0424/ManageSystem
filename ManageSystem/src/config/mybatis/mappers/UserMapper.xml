@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC   
+    "-//mybatis.org//DTD Mapper 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+
+<mapper namespace="cn.MS.dao.UserMapper">
+	<select id="getUserById" resultMap="user">
+		select * from user where id = #{id}
+	</select>
+	<select id="getUserByLoginname" resultMap="user">
+		select * from user where loginname = #{loginName}
+	</select>
+	<select id="getUserByName" resultMap="user">
+		select * from user where name = #{name}
+	</select>
+	<select id="getAllUser" resultMap="user">
+		select * from user
+	</select>
+	<select id="getAllActiveUser" resultMap="user">
+		select * from user where state = 1
+	</select>
+	<select id="getALLWriteoffUser" resultMap="user">
+		select * from user where state = 0
+	</select> 
+	<select id="getDepartmentByUser" resultMap="department">
+		select * from department where id = #{id}
+	</select>
+	<select id="getRoleByUser" resultMap="role">
+		<!-- select id,role_name roleName, description,state,role_limit roleLimit from role where id = #{id} -->
+		select * from role where id = #{id}
+	</select>
+	<update id="modifyUserByid">
+		update user 
+		<set>
+			<if test="#{jobNumber} != null">job_number=#{jobNumber},</if>
+			<if test="loginName != null">loginname=#{loginName},</if>
+			<if test="password != null">password=#{password},</if>
+			<if test="name != null">name=#{name},</if>
+			<if test="sex != null">sex=#{sex},</if>
+			<if test="birthday != null">birthday=#{birthday},</if>
+			<if test="phone != null">phone=#{phone},</if>
+			<if test="mobilePhone != null">mobile_phone=#{mobilePhone},</if>
+			<if test="email != null">email=#{email},</if>
+			<if test="state != null">state=#{state},</if>
+			<if test="departmentName != null">department_name=#{departmentName},</if>
+			<if test="department != null">department_id=#{department.id},</if>
+			<if test="role != null">role_id=#{role.id},</if>
+		</set>
+		where id = #{id}
+	</update>
+	<insert id="addUser">
+		insert user(job_number,loginname,password,name,sex,birthday,
+			phone,mobile_phone,email,state,department_name,department_id,role_id)
+		values(#{jobNumber},#{loginName},#{password},#{name},#{sex},#{birthday},
+			#{phone},#{mobilePhone},#{email},#{state},#{departmentName},#{department.id},#{role.id})
+	</insert>
+	<select id="getUsersByDepartment" resultMap="user">
+		select *from user where department_id = #{id}
+	</select>
+	<select id="getUsersByRole" resultMap="user">
+		select *from user where role_id = #{id}
+	</select>
+	<!-- 结果集映射配置 -->
+	<resultMap type="cn.MS.bean.User" id="user">
+		<id property="id" column="id"/>
+		<result property="loginName" column="loginname"/>
+		<result property="jobNumber" column="job_number"/>
+		<result property="mobilePhone" column="mobile_phone"/>
+		<result property="departmentName" column="department_name"/>
+		<association property="department" javaType="cn.MS.bean.Department" select="getDepartmentByUser" column="department_id"/>
+		<association property="role" javaType="cn.MS.bean.Role" select="getRoleByUser" column="role_id"/>
+	</resultMap>
+	<resultMap type="cn.MS.bean.Department" id="department">
+			<id property="id" column="id"/>
+			<result property="departmentName" column="department_name"/>
+			<result property="phone" column="phone"/>
+	</resultMap>
+	<resultMap type="cn.MS.bean.Role" id="role">
+			<id property="id" column="id"/>
+			<result property="roleName" column="role_name" />
+			<result property="roleLimit" column="role_limit"/>
+	</resultMap>
+	
+</mapper>
